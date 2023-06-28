@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+  <qresource>
+    <file>./ovl-icon.png</file>
+    <file>./OVL-Config_logo_name_white.png</file>
+  </qresource>
+</RCC>
