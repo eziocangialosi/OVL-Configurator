@@ -1,6 +1,59 @@
 #include "ovl_requester.h"
 
-ovl_requester::ovl_requester()
+void ovl_requester::setInstanceAddr(QString aInstAddr)
 {
+    this->instanceAddr = aInstAddr;
+}
 
+void ovl_requester::login(QString aEmail, QString aPswd)
+{
+    QString login_url = "https://" + this->instanceAddr + "/user/" + aEmail + "/" + aPswd;
+    this->requestHeading(login_url);
+    this->manager.get(*pRq);
+}
+
+void ovl_requester::new_user(QString aEmail, QString aPswd)
+{
+    QString newuser_url = "https://" + this->instanceAddr + "/user/"/* + aEmail + "/" + aPswd + "/undefined"*/;
+    QJsonObject jsonObject;
+    jsonObject.insert("mail",aEmail);
+    jsonObject.insert("password",aPswd);
+    jsonObject.insert("notif","NaN");
+    QString json_str = "{\"mail\":\"" + aEmail + "\",\"password\":\"" + aPswd + "\",\"notif\":\"undefined\"}";
+    this->requestHeading(newuser_url);
+    this->pRq->setRawHeader("Accept", "application/json");
+    this->pRq->setRawHeader("Content-Type", "application/json");
+    QByteArray jsonByteArray = QByteArray::fromStdString(json_str.toStdString());
+    qDebug()<< jsonByteArray.toStdString();
+    this->manager.post(*pRq,jsonByteArray);
+}
+
+void ovl_requester::requestHeading(QString endpoint)
+{
+//    this->manager = new QNetworkAccessManager;
+    this->pRq = new QNetworkRequest(QUrl(endpoint));
+}
+
+QJsonObject ovl_requester::readJson(QString inputJsonStr)
+{
+    QJsonDocument d = QJsonDocument::fromJson(inputJsonStr.toUtf8());
+    QJsonObject jsonExtracted = d.object();
+
+    return jsonExtracted;
+}
+
+void ovl_requester::resetRequest(){
+//    delete this->manager;
+    delete this->pRq;
+}
+
+void ovl_requester::disconnectUser(){
+    if(userConnected){
+        this->userToken = "";
+        userConnected = false;
+    }
+}
+void ovl_requester::setUserToken(QString* paUserToken){
+    this->userToken = *paUserToken;
+    this->userConnected = true;
 }

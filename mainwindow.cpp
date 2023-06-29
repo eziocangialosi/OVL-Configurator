@@ -6,9 +6,13 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->setAttribute(Qt::WA_DeleteOnClose);
     h_win = new homewindow;
     h_win->show();
-    h_win->rqInstAddr();
+    if(!h_win->rqInstAddr()){
+        this->close();
+    }
+    connect(h_win,&homewindow::sig_requestMainWindow,this,&MainWindow::on_request_show);
 }
 
 MainWindow::~MainWindow()
@@ -16,3 +20,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::on_request_show(){
+    this->show();
+}
