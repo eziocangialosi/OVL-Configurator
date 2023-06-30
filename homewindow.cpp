@@ -50,7 +50,7 @@ bool homewindow::rqInstAddr()
                 dialWait.setStandardButtons(QMessageBox::Ok);
                 dialWait.exec();
                 addrOk = true;
-                this->api.setInstanceAddr(aInstAddr);
+                this->pApi->setInstanceAddr(aInstAddr);
             }else{
                 dialWait.setText("The address is not valid, please retry");
                 dialWait.setStandardButtons(QMessageBox::Retry);
@@ -101,11 +101,11 @@ void homewindow::checkCredentialsFilled(){
 void homewindow::on_pB_send_clicked()
 {
     if(!this->signupMode){
-        this->api.login(this->ui->lE_email->text(),this->ui->lE_pswd->text());
-        connect(&this->api.manager,&QNetworkAccessManager::finished,this,&homewindow::on_login_rq_finished);
+        this->pApi->login(this->ui->lE_email->text(),this->ui->lE_pswd->text());
+        connect(&this->pApi->manager,&QNetworkAccessManager::finished,this,&homewindow::on_login_rq_finished);
     }else{
-        this->api.new_user(this->ui->lE_email->text(),this->ui->lE_pswd->text());
-        connect(&this->api.manager,&QNetworkAccessManager::finished,this,&homewindow::on_signup_rq_finished);
+        this->pApi->new_user(this->ui->lE_email->text(),this->ui->lE_pswd->text());
+        connect(&this->pApi->manager,&QNetworkAccessManager::finished,this,&homewindow::on_signup_rq_finished);
     }
 }
 
@@ -144,14 +144,13 @@ void homewindow::on_pB_chgMode_clicked()
 void homewindow::on_login_rq_finished(QNetworkReply *reply)
 {
     if(reply->errorString() == "Unknown error"){
-        QJsonObject response = api.readJson(QString::fromStdString(reply->readAll().toStdString()));
+        QJsonObject response = this->pApi->readJson(QString::fromStdString(reply->readAll().toStdString()));
         QJsonObject errorBranch = response["error"].toObject();
         QString aUserToken = response["user"].toString();
         int errorCode = errorBranch["Code"].toInt();
         switch(errorCode){
             case 0:
-                this->api.setUserToken(&aUserToken);
-                this->close();
+                this->pApi->setUserToken(&aUserToken);
                 emit sig_requestMainWindow();
                 break;
             case 30:
@@ -166,14 +165,14 @@ void homewindow::on_login_rq_finished(QNetworkReply *reply)
     }else{
         QMessageBox::warning(this, "Error", "An error occured during the login request...\nPlease retry...",QMessageBox::Ok);
     }
-    disconnect(&this->api.manager,&QNetworkAccessManager::finished,this,&homewindow::on_login_rq_finished);
-    this->api.resetRequest();
+    disconnect(&this->pApi->manager,&QNetworkAccessManager::finished,this,&homewindow::on_login_rq_finished);
+    this->pApi->resetRequest();
 }
 
 void homewindow::on_signup_rq_finished(QNetworkReply *reply)
 {
     if(reply->errorString() == "Unknown error"){
-        QJsonObject response = api.readJson(QString::fromStdString(reply->readAll().toStdString()));
+        QJsonObject response = this->pApi->readJson(QString::fromStdString(reply->readAll().toStdString()));
         QJsonObject errorBranch = response["error"].toObject();
         int errorCode = errorBranch["Code"].toInt();
         switch(errorCode){
@@ -197,6 +196,10 @@ void homewindow::on_signup_rq_finished(QNetworkReply *reply)
     }else{
         QMessageBox::warning(this, "Error", "An error occured during the login request...\nPlease retry...",QMessageBox::Ok);
     }
-    disconnect(&this->api.manager,&QNetworkAccessManager::finished,this,&homewindow::on_signup_rq_finished);
-    this->api.resetRequest();
+    disconnect(&this->pApi->manager,&QNetworkAccessManager::finished,this,&homewindow::on_signup_rq_finished);
+    this->pApi->resetRequest();
+}
+
+void homewindow::setRequester(ovl_requester* apApi){
+    this->pApi = apApi;
 }

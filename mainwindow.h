@@ -22,5 +22,6 @@ class MainWindow : public QMainWindow
     private:
         Ui::MainWindow *ui;
         homewindow *h_win;
+        ovl_requester api;
 };
 #endif // MAINWINDOW_H

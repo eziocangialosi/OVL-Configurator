@@ -25,6 +25,7 @@ class homewindow : public QMainWindow
         explicit homewindow(QWidget *parent = nullptr);
         ~homewindow();
         bool rqInstAddr();
+        void setRequester(ovl_requester* apApi);
 
     private slots:
         void on_pB_send_clicked();
@@ -42,7 +43,7 @@ class homewindow : public QMainWindow
     private:
         Ui::homewindow *ui;
         QString instAddr;
-        ovl_requester api;
+        ovl_requester* pApi;
         bool signupMode = false;
         QWidget *pMainWin;
 

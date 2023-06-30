@@ -11,32 +11,87 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>OVL-Configurator</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="lb_logo">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>170</x>
-      <y>110</y>
+      <x>530</x>
+      <y>10</y>
       <width>260</width>
       <height>88</height>
      </rect>
     </property>
+    <property name="minimumSize">
+     <size>
+      <width>260</width>
+      <height>88</height>
+     </size>
+    </property>
     <property name="baseSize">
      <size>
-      <width>2600</width>
-      <height>875</height>
+      <width>260</width>
+      <height>88</height>
      </size>
+    </property>
+    <property name="cursor">
+     <cursorShape>ArrowCursor</cursorShape>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::ClickFocus</enum>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
     </property>
     <property name="text">
      <string notr="true"/>
     </property>
-    <property name="pixmap">
-     <pixmap>OVL-Config_logo_name_white.png</pixmap>
+    <property name="textFormat">
+     <enum>Qt::RichText</enum>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="indent">
+     <number>0</number>
+    </property>
+    <property name="textInteractionFlags">
+     <set>Qt::LinksAccessibleByMouse</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lb_login">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>27</y>
+      <width>351</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Space Grotesk Light</family>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Configuring a new tracker</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
