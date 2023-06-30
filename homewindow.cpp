@@ -83,6 +83,12 @@ void homewindow::checkCredentialsFilled(){
         allOk = true;
     }
 
+    if(!this->ui->lE_pswd->text().isEmpty() && this->ui->lE_pswd->text().length() < 8 && this->signupMode){
+        allOk = false;
+    }else{
+        allOk = true;
+    }
+
     if(this->ui->lE_pswd->text().isEmpty() || this->ui->lE_pswd->text().isEmpty()){
         allOk = false;
     }
