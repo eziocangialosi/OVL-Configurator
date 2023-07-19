@@ -107,14 +107,15 @@ void homewindow::checkCredentialsFilled(){
 void homewindow::on_pB_send_clicked()
 {
     if(!this->signupMode){
-        this->pApi->login(this->ui->lE_email->text(),this->ui->lE_pswd->text());
+        QString userMail = this->ui->lE_email->text();
+        this->pApi->login(userMail,this->ui->lE_pswd->text());
+        this->pApi->setUserMail(&userMail);
         connect(&this->pApi->manager,&QNetworkAccessManager::finished,this,&homewindow::on_login_rq_finished);
     }else{
         this->pApi->new_user(this->ui->lE_email->text(),this->ui->lE_pswd->text());
         connect(&this->pApi->manager,&QNetworkAccessManager::finished,this,&homewindow::on_signup_rq_finished);
     }
 }
-
 
 void homewindow::on_lE_email_textChanged(const QString &arg1)
 {
@@ -126,7 +127,6 @@ void homewindow::on_lE_pswd_textChanged(const QString &arg1)
 {
     this->checkCredentialsFilled();
 }
-
 
 void homewindow::on_pB_chgMode_clicked()
 {
@@ -167,9 +167,13 @@ void homewindow::on_login_rq_finished(QNetworkReply *reply)
                 break;
             default:
                 QMessageBox::warning(this,"Error","An API error occured...\nPlease retry...",QMessageBox::Ok);
+        };
+        if(errorCode != 0){
+            this->pApi->resetUserCredentials();
         }
     }else{
         QMessageBox::warning(this, "Error", "An error occured during the login request...\nPlease retry...",QMessageBox::Ok);
+        this->pApi->resetUserCredentials();
     }
     disconnect(&this->pApi->manager,&QNetworkAccessManager::finished,this,&homewindow::on_login_rq_finished);
     this->pApi->resetRequest();

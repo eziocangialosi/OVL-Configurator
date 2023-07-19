@@ -12,8 +12,6 @@ class ovl_requester : public QObject
         Q_OBJECT
 
     public:
-//        explicit ovl_requester(QObject *parent = nullptr);
-
         void setInstanceAddr(QString aInstAddr);
         void login(QString aEmail, QString aPswd);
         void new_user(QString aEmail, QString aPswd);
@@ -22,13 +20,17 @@ class ovl_requester : public QObject
         void resetRequest();
         void disconnectUser();
         void setUserToken(QString* paUserToken);
+        void setUserMail(QString* paUserName);
+        QString getUserMail();
+        void resetUserCredentials();
 
         QNetworkAccessManager manager;
-        QString userToken;
         bool userConnected = false;
     private:
         QString instanceAddr;
         QNetworkRequest* pRq;
+        QString userToken;
+        QString userMail;
 
         void requestHeading(QString endpoint);
 

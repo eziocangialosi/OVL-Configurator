@@ -14,7 +14,7 @@ void ovl_requester::login(QString aEmail, QString aPswd)
 
 void ovl_requester::new_user(QString aEmail, QString aPswd)
 {
-    QString newuser_url = "https://" + this->instanceAddr + "/user/"/* + aEmail + "/" + aPswd + "/undefined"*/;
+    QString newuser_url = "https://" + this->instanceAddr + "/user/";
     QJsonObject jsonObject;
     jsonObject.insert("mail",aEmail);
     jsonObject.insert("password",aPswd);
@@ -30,7 +30,6 @@ void ovl_requester::new_user(QString aEmail, QString aPswd)
 
 void ovl_requester::requestHeading(QString endpoint)
 {
-//    this->manager = new QNetworkAccessManager;
     this->pRq = new QNetworkRequest(QUrl(endpoint));
 }
 
@@ -43,17 +42,29 @@ QJsonObject ovl_requester::readJson(QString inputJsonStr)
 }
 
 void ovl_requester::resetRequest(){
-//    delete this->manager;
     delete this->pRq;
 }
 
 void ovl_requester::disconnectUser(){
     if(userConnected){
-        this->userToken = "";
-        userConnected = false;
+        this->resetUserCredentials();
     }
 }
 void ovl_requester::setUserToken(QString* paUserToken){
     this->userToken = *paUserToken;
     this->userConnected = true;
+}
+
+void ovl_requester::setUserMail(QString* paUserName){
+    this->userMail = *paUserName;
+}
+
+QString ovl_requester::getUserMail(){
+    return this->userMail;
+}
+
+void ovl_requester::resetUserCredentials(){
+    this->userMail = "";
+    this->userToken = "";
+    this->userConnected = false;
 }

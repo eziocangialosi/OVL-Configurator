@@ -25,6 +25,12 @@ set(PROJECT_SOURCES
         resources.qrc
         ovl_requester.h
         ovl_requester.cpp
+        tarduinocli.h
+        tarduinocli.cpp
+        tasks.h
+        tasks.cpp
+        ovl_conf.h
+        ovl_conf.cpp
         ${TS_FILES}
 )
 
