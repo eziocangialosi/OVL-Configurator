@@ -20,6 +20,7 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
     QThread threadBoardResearch;
+    QThread threadDlSketch;
     public:
         MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
@@ -28,8 +29,10 @@ class MainWindow : public QMainWindow
         void on_request_show();
         void onDevicesChange(QString);
         void onBoardSearchFinished(const short nbrSuitBoards);
+        void onDlSketchFinished(const short errorCode);
     signals:
         void runSearchBoards(ovl_conf* apUtils);//Used to run the task to search boards in a thread
+        void runDlSketch(std::string aDir, std::string aUrl, std::string aSketchPath);//Used to run the task to download the sketch in a thread
     private:
         Ui::MainWindow *ui;
         homewindow *h_win;
@@ -37,6 +40,7 @@ class MainWindow : public QMainWindow
         ovl_conf config;
         QFileSystemWatcher *USBwatcher;
         searchBoard_Task *pSearchBoard_Task;
+        dlSketch_Task *pDlSketch_Task;
         short suitBoards = 0;
         short oldSuitBoards = -1;
         bool boardTaskRunning = false;

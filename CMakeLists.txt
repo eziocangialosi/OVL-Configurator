@@ -31,6 +31,10 @@ set(PROJECT_SOURCES
         tasks.cpp
         ovl_conf.h
         ovl_conf.cpp
+        twget.h
+        twget.cpp
+        tgzip.h
+        tgzip.cpp
         ${TS_FILES}
 )
 

@@ -22,6 +22,10 @@ MainWindow::~MainWindow()
 {
     threadBoardResearch.quit();
     threadBoardResearch.wait();
+
+    threadDlSketch.quit();
+    threadDlSketch.wait();
+    this->config.clearDir();
     delete ui;
 }
 
@@ -54,12 +58,20 @@ void MainWindow::on_request_show(){
     connect(pSearchBoard_Task, &searchBoard_Task::searchFinished, this, &MainWindow::onBoardSearchFinished);
     threadBoardResearch.start();
 
+    pDlSketch_Task = new dlSketch_Task();
+    pDlSketch_Task->moveToThread(&threadDlSketch);
+    connect(&threadDlSketch, &QThread::finished, pDlSketch_Task, &QObject::deleteLater);
+    connect(this, &MainWindow::runDlSketch, pDlSketch_Task, &dlSketch_Task::runDownload);
+    connect(pDlSketch_Task, &dlSketch_Task::downloadFinished, this, &MainWindow::onDlSketchFinished);
+    threadDlSketch.start();
+
     USBwatcher = new QFileSystemWatcher(this);
     USBwatcher->addPath("/dev");
     connect(USBwatcher, SIGNAL(directoryChanged(QString)), this, SLOT(onDevicesChange(QString)));
 
     this->ui->cB_board->addItem("No Boards Found");
     this->searchBoards();
+    emit(this->runDlSketch(WORK_DIR,REPO_URL,SKETCH_DIR));
 
     this->show();
     this->setWindowState(Qt::WindowState::WindowActive);
@@ -100,4 +112,9 @@ void MainWindow::onBoardSearchFinished(const short nbrSuitBoards){
         fileBoards.close();
     }
     this->boardTaskRunning = false;
+}
+
+void MainWindow::onDlSketchFinished(const short errorCode){
+//    QMessageBox::information(this,"dl finished",QString::number(errorCode),QMessageBox::Ok);
+    qDebug()<<errorCode;
 }

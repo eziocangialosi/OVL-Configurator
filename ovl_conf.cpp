@@ -30,3 +30,12 @@ short ovl_conf::catchSuitableBoards(short nbrTotal)
     }
     return suitBoards;
 }
+
+void ovl_conf::clearDir(){
+    std::string cmdLine = "rm -rf ";
+    cmdLine += SKETCH_DIR;
+    cmdLine += " && rm ";
+    cmdLine += WORK_DIR;
+    cmdLine += ARCHIVE_NAME;
+    system(cmdLine.c_str());
+}
