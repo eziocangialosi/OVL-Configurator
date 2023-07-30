@@ -35,6 +35,7 @@ set(PROJECT_SOURCES
         twget.cpp
         tgzip.h
         tgzip.cpp
+        digitspinbox.hpp
         ${TS_FILES}
 )
 

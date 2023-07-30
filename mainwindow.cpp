@@ -16,6 +16,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(h_win,&homewindow::sig_requestMainWindow,this,&MainWindow::on_request_show);
     QPixmap pix_logo(":/OVL-Config_logo_name_white.png");
     ui->lb_logo->setPixmap(pix_logo);
+
+    this->sB_gprs_pin = new digitSpinBox(this->ui->tab_essential);
+    this->sB_gprs_pin->setGeometry(680,300,60,30);
+    this->sB_gprs_pin->setMinimum(0);
+    this->sB_gprs_pin->setMaximum(9999);
+    this->sB_gprs_pin->setDisabled(true);
 }
 
 MainWindow::~MainWindow()
@@ -69,6 +75,8 @@ void MainWindow::on_request_show(){
     USBwatcher->addPath("/dev");
     connect(USBwatcher, SIGNAL(directoryChanged(QString)), this, SLOT(onDevicesChange(QString)));
 
+    this->ui->tabSettings->setDisabled(true);
+
     this->ui->cB_board->addItem("No Boards Found");
     this->searchBoards();
     emit(this->runDlSketch(WORK_DIR,REPO_URL,SKETCH_DIR));
@@ -116,5 +124,27 @@ void MainWindow::onBoardSearchFinished(const short nbrSuitBoards){
 
 void MainWindow::onDlSketchFinished(const short errorCode){
 //    QMessageBox::information(this,"dl finished",QString::number(errorCode),QMessageBox::Ok);
-    qDebug()<<errorCode;
+//    qDebug()<<errorCode;
 }
+
+void MainWindow::on_cB_board_currentIndexChanged(int index)
+{
+    if(index == 0){
+        this->ui->tabSettings->setDisabled(true);
+//        this->ui->tabSettings->setCurrentIndex(0);
+    }else{
+        this->ui->tabSettings->setEnabled(true);
+    }
+}
+
+
+void MainWindow::on_checkBox_stateChanged(int arg1)
+{
+    if(arg1){
+        this->sB_gprs_pin->setEnabled(true);
+    }else{
+        this->sB_gprs_pin->setDisabled(true);
+        this->sB_gprs_pin->setValue(0);
+    }
+}
+
